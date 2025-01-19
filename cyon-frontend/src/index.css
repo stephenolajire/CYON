@@ -35,7 +35,7 @@ body {
   /* Spacing */
   --spacing-small: 3rem; /* 8px */
   --spacing-medium: 5.5rem; /* 16px */
-  --spacing-large: 7rem; /* 32px */
+  --spacing-large: 6.5rem; /* 32px */
 
   /* Shadows */
   --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
