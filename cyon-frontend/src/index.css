@@ -1,0 +1,42 @@
+html {
+  font-size: 62.5%;
+}
+
+|*{
+  padding: 0%;
+  margin: 0%;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Roboto, Open-Sans, Marriweather;
+}
+
+:root {
+  /* Color Palette */
+  --primary-color: #19244A;
+  --secondary-color: #FFD11F;
+  --background-color: #f9f9f9;
+  --text-color: #333;
+  --grey: #949BAF;
+  --tertiary-color:#0E1437;
+
+  /* Typography */
+  --font-family: 'Roboto', sans-serif;
+  --base-font-size: 1.6rem; /* 16px */
+  --base-big-font: 1.8rem; /* 24px */
+  --subheading-font-size: 2rem; /* 20px */
+  --line-height: 1.5;
+  --desktop-link: 2rem;
+  --header-one: 5rem;
+  --header-two: 4rem;
+  --header-three: 3rem;
+
+  /* Spacing */
+  --spacing-small: 3rem; /* 8px */
+  --spacing-medium: 5.5rem; /* 16px */
+  --spacing-large: 7rem; /* 32px */
+
+  /* Shadows */
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
