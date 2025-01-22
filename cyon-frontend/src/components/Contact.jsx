@@ -5,7 +5,7 @@ import "aos/dist/aos.css"; // Don't forget to import AOS styles
 import contact from "../assets/contact.webp";
 import Button from "../ui/Button";
 
-const Contact = () => {
+const Contact = ({id}) => {
   useEffect(() => {
     AOS.init({
       duration: 1000, // Animation duration
@@ -14,7 +14,7 @@ const Contact = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.containers} id={id}>
       <div className={styles.contentWrapper}>
         <div className={styles.cont}>
           <p className={styles.text} data-aos="fade-up">

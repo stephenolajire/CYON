@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import styles from "../style/Mission.module.css";
 import AOS from "aos";
 import "aos/dist/aos.css"; // Don't forget to import AOS styles
 import priest from '../assets/priest.avif'
 import Button from "../ui/Button";
+import { GlobalContext } from "../constant/context/GlobalContext";
 
 const Mission = () => {
+  const {openModal} = useContext(GlobalContext)
   useEffect(() => {
     AOS.init({
       duration: 1000, // Animation duration
@@ -30,7 +32,7 @@ const Mission = () => {
           </p>
 
           <div className={styles.btnDiv}>
-            <Button content="Join Now" />
+            <Button content="Join Now" onclick={openModal}/>
           </div>
         </div>
       </div>

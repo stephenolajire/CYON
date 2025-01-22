@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import church from "../assets/churchh.avif";
 import styles from "../style/Hero.module.css";
 import Button from "../ui/Button";
+import { GlobalContext } from "../constant/context/GlobalContext";
 
 const Hero = () => {
+  const {openModal} = useContext(GlobalContext)
   return (
     <section
       className={styles.heroSection}
@@ -18,7 +20,7 @@ const Hero = () => {
             </h1>
           </div>
           <div className={styles.btnCont}>
-            <Button content="Get Involved" />
+            <Button content="Get Involved" onclick={openModal}/>
           </div>
         </div>
       </div>

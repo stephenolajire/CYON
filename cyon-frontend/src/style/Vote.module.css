@@ -1,0 +1,123 @@
+/* General Page Styling */
+.votingPage {
+  padding: 2rem;
+  background-color: var(--primary-color);
+  margin-top: 10rem;
+}
+
+.title {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 2rem;
+  font-size: var(--header-two);
+}
+
+/* Post Section Styling */
+.postSection {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.postTitle {
+  font-size: 24px;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #0056b3;
+  padding-bottom: 0.5rem;
+}
+
+/* Candidate List Styling */
+.candidateList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.candidateCard {
+  background-color: #f4f4f4;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  width: 25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.candidateImage {
+  width: 15rem;
+  height: 15rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.candidateInfo {
+  text-align: center;
+}
+
+.candidateName {
+  font-size: 20px;
+  color: var(--grey);
+  margin: 10px 0;
+  text-transform: capitalize;
+}
+
+.manifesto {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.totalVotes {
+  font-size: 14px;
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.voteButton {
+  width: 15rem;
+  height: 4rem;
+  font-size: var(--base-font-size);
+  color: #fff;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.voteButton:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.voteButton:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* Total Votes Section */
+.totalVotesSection {
+  margin-top: 15px;
+  font-size: 16px;
+  color: #444;
+  text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .candidateList {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .candidateCard {
+    width: 100%;
+  }
+}

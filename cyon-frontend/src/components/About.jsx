@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
 import styles from "../style/Mission.module.css";
 import AOS from "aos";
-import "aos/dist/aos.css"; // Don't forget to import AOS styles
+import "aos/dist/aos.css";
 import youth from "../assets/youthh.webp";
 import Button from "../ui/Button";
 
-const About = () => {
+const About = ({id}) => {
   useEffect(() => {
     AOS.init({
-      duration: 1000, // Animation duration
-      once: false, // Ensures the animation runs only once
+      duration: 1000, 
+      once: false, 
     });
   }, []);
 
   return (
-    <div className={styles.containers}>
+    <div className={styles.containers} id={id}>
       <div className={styles.contentWrapper}>
         <div className={styles.cont}>
           <p className={styles.text} data-aos="fade-up">

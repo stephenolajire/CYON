@@ -1,11 +1,21 @@
 .container, .containers {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 10rem;
-  height: auto;
   gap: 5rem;
-  background-color: var(--primary-color);
   place-content: center;
+}
+
+.outside {
+    height: auto;
+    padding: 10rem;
+    background-color: var(--primary-color);
+}
+
+.program {
+  font-size: var(--header-one);
+  color: #fff;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .containers {
@@ -44,11 +54,12 @@
   background-position: center;
   background-repeat: no-repeat;
   height: 60rem;
+  width: 100%;
 }
 
 .contentWrapper {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .cont {
@@ -56,22 +67,54 @@
 }
 
 .btnDiv {
-    margin-top: 4rem;
+  margin-top: 4rem;
+}
+
+.explore {
+  text-align: center;
+  color: var(--secondary-color);
+  font-size: 1.3rem;
+}
+
+.contt {
+  margin-bottom: 4rem;
+}
+
+.div {
+  border: 1px solid var(--secondary-color);
+  /* margin-bottom: 3rem; */
+  width: 20rem;
+  height: 2rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+
 }
 
 @media (min-width: 300px) and (max-width: 767px) {
-  .container, .containers {
+  .outside {
     padding: 10rem 2rem;
     display: grid;
     grid-template-columns: 1fr;
   }
 
-  .header, .headers {
+  .container, .containers {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .header, .headers{
     font-size: var(--header-two);
     line-height: var(--spacing-large);
   }
 
   .imageWrapper, .imageWrappers {
     height: 45rem;
+  }
+
+  .program {
+    font-size: var(--header-two);
   }
 }

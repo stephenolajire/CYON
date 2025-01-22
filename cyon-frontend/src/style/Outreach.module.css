@@ -1,0 +1,29 @@
+.container {
+    padding: 5rem 10rem;
+}
+
+.header {
+    color: var(--primary-color);
+    font-size: var(--header-one);
+    text-align: center;
+}
+
+.text {
+    text-align: center;
+    color: var(--grey);
+    font-size: var(--base-big-font);
+    line-height: var(--spacing-small);
+    margin: 3rem 0rem;
+}
+
+.cont {
+    margin: auto;
+    width: 25rem;
+}
+
+
+@media (min-width:300px) and (max-width:768px) {
+    .container {
+        padding: 10rem 2rem;
+    }
+}
