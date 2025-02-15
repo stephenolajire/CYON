@@ -9,7 +9,7 @@
 }
 
 .containers {
-    background-color: var(--tertiary-color);
+  background-color: var(--tertiary-color);
 }
 
 .text, .textp {

@@ -3,10 +3,11 @@
     justify-content: center;
     align-items: center;
     height: 80vh; 
+    background-color: var(--primary-color);
   }
   
   .spinner {
-    border: 2.5rem solid rgba(0, 0, 0, 0.1);
+    border: 2.5rem solid #fff;
     border-top: 2.5rem solid var(--primary-color); 
     border-radius: 50%;
     width: 20rem;
