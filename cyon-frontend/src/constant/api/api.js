@@ -2,7 +2,7 @@ import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 
 const link = "http://127.0.0.1:8000/api/"
-const render = "https://cyon-backend.onrender.com";
+const render = "https://cyon-backend.onrender.com/api/";
 
 const api = axios.create({
   baseURL: render,
