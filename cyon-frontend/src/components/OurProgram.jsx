@@ -48,7 +48,9 @@ const OurProgram = ({id}) => {
           className={styles.imageWrapper}
           data-aos="zoom-in"
           style={{
-            backgroundImage: `url(http://localhost:8000${program.image})`,
+            backgroundImage: `url(${program.image})`, 
+            backgroundSize: "cover",
+            backgroundPosition: "center", 
           }}
         ></div>
       </div>

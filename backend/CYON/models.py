@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
+from cloudinary.models import CloudinaryField
 
 User = get_user_model()
 
@@ -11,7 +12,7 @@ class Program(models.Model):
     title = models.CharField(max_length=500)
     description = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(default=" ", upload_to='program_images/')  # Path for storing images
+    image =  CloudinaryField('image', blank=True, null=True) # Path for storing images
 
     class Meta:
         ordering = ['-date_created']  # Default ordering by `date_created` in descending order
@@ -54,7 +55,7 @@ class Candidate(models.Model):
     name = models.CharField(max_length=100)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='candidates')
     votes = models.IntegerField(default=0)
-    image = models.ImageField(upload_to='candidate_images/')  # Path for storing images
+    image =  CloudinaryField('image', blank=True, null=True)  # Path for storing images
 
     def __str__(self):
         return f"{self.name} - {self.post.name} ({self.election.title})"

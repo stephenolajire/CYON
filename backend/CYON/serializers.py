@@ -1,8 +1,17 @@
 from rest_framework import serializers
 from .models import *
+from django.conf import settings
 
 
 class ProgramSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
+    
     class Meta:
         model = Program
         fields = '__all__'

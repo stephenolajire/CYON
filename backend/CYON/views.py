@@ -17,7 +17,7 @@ class ProgramView(APIView):
         
         if latest_program:
             # Serialize the latest program
-            serializer = ProgramSerializer(latest_program)
+            serializer = ProgramSerializer(latest_program, context={'request': request})
             return Response(serializer.data)
         else:
             # If no programs exist, return an empty response
