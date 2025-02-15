@@ -2,10 +2,10 @@ import axios from 'axios';
 import {jwtDecode} from 'jwt-decode';
 
 const link = "http://127.0.0.1:8000/api/"
-const render = "https://llcentric-backend.onrender.com/"
+const render = "https://cyon-backend.onrender.com";
 
 const api = axios.create({
-  baseURL: link,
+  baseURL: render,
 });
 
 api.interceptors.request.use(
