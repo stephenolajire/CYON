@@ -2,12 +2,11 @@ import React, { useContext, useEffect } from "react";
 import styles from "../style/OurProgram.module.css";
 import AOS from "aos";
 import "aos/dist/aos.css"; // Don't forget to import AOS styles
-import priest from "../assets/program.webp";
-import Button from "../ui/Button";
 import { GlobalContext } from "../constant/context/GlobalContext";
+import Spinner from "./Spinner";
 
 const OurProgram = ({id}) => {
-  const {fetchProgram, program} = useContext(GlobalContext)
+  const {fetchProgram, program, loading} = useContext(GlobalContext)
   useEffect(() => {
     AOS.init({
       duration: 1000, // Animation duration
@@ -15,6 +14,10 @@ const OurProgram = ({id}) => {
     });
     fetchProgram()
   }, []);
+
+  if (loading) {
+    return <Spinner/>
+  }
 
   return (
     <div id={id} className={styles.outside}>

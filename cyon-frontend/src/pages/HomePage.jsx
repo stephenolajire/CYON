@@ -57,9 +57,9 @@ const HomePage = () => {
       <Helmet>
         <title>Home - CYON St George</title>
       </Helmet>
-      <div className={styles.voteDiv}>
+      <div>
         {program.title === "Election" && (
-          <>
+          <div className={styles.voteDiv}>
             <FaVoteYea
               className={styles.vote}
               onClick={!isElectionClosed ? openEmailModal : null}
@@ -68,7 +68,7 @@ const HomePage = () => {
                 opacity: isElectionClosed ? 0.5 : 1,
               }}
             />
-          </>
+          </div>
         )}
         {!isElectionClosed && timeLeft && (
           <p className={styles.countDown}>{timeLeft}</p>

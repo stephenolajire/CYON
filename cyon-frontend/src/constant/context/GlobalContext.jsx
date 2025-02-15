@@ -11,6 +11,7 @@ export const GlobalProvider = ({ children }) => {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [program, setProgram] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState()
+  const [loading, setLoading] = useState (false)
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -19,11 +20,12 @@ export const GlobalProvider = ({ children }) => {
   const closeEmailModal = () => setEmailModalOpen(false);
 
   const fetchProgram = async () => {
+    setLoading(true)
     try {
       const response = await api.get("program");
       if (response.data) {
         setProgram(response.data);
-        console.log(response.data)
+        setLoading(false)
       } else {
         return;
       }
@@ -79,6 +81,7 @@ export const GlobalProvider = ({ children }) => {
         setEmailModalOpen,
         setIsAuthenticated,
         isAuthenticated,
+        loading,
       }}
     >
       {children}
