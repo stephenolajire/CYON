@@ -23,7 +23,7 @@ export const GlobalProvider = ({ children }) => {
       const response = await api.get("program");
       if (response.data) {
         setProgram(response.data);
-        // console.log(response.data)
+        console.log(response.data)
       } else {
         return;
       }
