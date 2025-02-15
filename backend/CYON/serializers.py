@@ -24,6 +24,14 @@ class PostSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CandidateSerializer(serializers.ModelSerializer):
+
+    image = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
     post = PostSerializer()
     class Meta:
         model = Candidate

@@ -34,7 +34,7 @@ class LatestElectionCandidatesView(APIView):
             candidates = Candidate.objects.filter(election=latest_election)
             
             # Serialize the candidates
-            serializer = CandidateSerializer(candidates, many=True)
+            serializer = CandidateSerializer(candidates, many=True, context={'request': request})
             
             return Response(
                 serializer.data, status=status.HTTP_200_OK
