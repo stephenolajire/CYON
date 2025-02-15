@@ -57,9 +57,9 @@ const HomePage = () => {
       <Helmet>
         <title>Home - CYON St George</title>
       </Helmet>
-      <div>
+      <div className={styles.voteDiv}>
         {program.title === "Election" && (
-          <div className={styles.voteDiv}>
+          <div>
             <FaVoteYea
               className={styles.vote}
               onClick={!isElectionClosed ? openEmailModal : null}
