@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import api from "../api/api";
+import { jwtDecode } from "jwt-decode";
 
 // Create Context
 export const GlobalContext = createContext();
@@ -9,6 +10,7 @@ export const GlobalProvider = ({ children }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [program, setProgram] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState()
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -21,7 +23,7 @@ export const GlobalProvider = ({ children }) => {
       const response = await api.get("program");
       if (response.data) {
         setProgram(response.data);
-        console.log(response.data)
+        // console.log(response.data)
       } else {
         return;
       }
@@ -45,6 +47,7 @@ export const GlobalProvider = ({ children }) => {
 
       if (expiryDate > currentTime) {
         setIsAuthenticated(true);
+        console.log(isAuthenticated)
         closeEmailModal()
       } else {
         setIsAuthenticated(false); // Token has expired
@@ -56,9 +59,9 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
-  // useEffect(() => {
-  //   auth();
-  // }, []);
+  useEffect(() => {
+    auth();
+  }, []);
 
   return (
     <GlobalContext.Provider
@@ -74,6 +77,8 @@ export const GlobalProvider = ({ children }) => {
         openEmailModal,
         closeEmailModal,
         setEmailModalOpen,
+        setIsAuthenticated,
+        isAuthenticated,
       }}
     >
       {children}

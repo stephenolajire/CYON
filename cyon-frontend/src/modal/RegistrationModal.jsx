@@ -83,7 +83,7 @@ const RegistrationModal = () => {
         title: "Registration Failed!",
         icon: "error",
         text:
-          error.response?.data?.message ||
+          error.response?.data?.message?.password ||
           "An error occurred. Please try again.",
         showClass: {
           popup: `
@@ -100,6 +100,7 @@ const RegistrationModal = () => {
             `,
         },
       });
+      console.log(error.response.message)
     } finally {
       setLoading(false); // Stop loading
     }

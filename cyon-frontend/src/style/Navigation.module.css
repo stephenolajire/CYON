@@ -63,6 +63,18 @@
   cursor: pointer;
 }
 
+.logoutButton {
+  height: 4rem;
+  width: 15rem;
+  background-color: white;
+  color: var(--primary-color);
+  font-size: 1.6rem;
+  /* font-weight: 600; */
+  border: 1px solid var(--primary-color);
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
 .donateButton:hover {
   opacity: 0.7;
 }
@@ -81,14 +93,17 @@
   position: fixed;
   right: 0;
   bottom: 0;
-  width: 6rem;
-  height: 6rem;
-  border-radius: 3rem;
-  background-color: var(--primary-color);
+  width: 8rem;
+  height: 8rem;
+  border-radius: 4rem;
+  background-color: green;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .vote {
@@ -96,6 +111,11 @@
   height: 4rem;
   width: 4rem;
   border-radius: 2rem;
+}
+
+.countDown {
+  font-weight: 600;
+  color: #fff;
 }
 
 /* Responsive Styles */

@@ -39,6 +39,7 @@ const EmailModal = () => {
         const refresh = response.data.refresh;
         localStorage.setItem("access", access);
         localStorage.setItem("refresh", refresh);
+        auth()
         Swal.fire({
           title: "Validated!",
           text: "Pls go and cast your vote !.",
@@ -63,7 +64,6 @@ const EmailModal = () => {
           email: "",
           password: "", 
         });
-        auth()
         navigate("vote");
       }
     } catch (error) {

@@ -11,7 +11,7 @@ class Program(models.Model):
     title = models.CharField(max_length=500)
     description = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(default=" ")
+    image = models.ImageField(default=" ", upload_to='program_images/')  # Path for storing images
 
     class Meta:
         ordering = ['-date_created']  # Default ordering by `date_created` in descending order
@@ -22,6 +22,7 @@ class Program(models.Model):
 
 class Post(models.Model):
     name = models.CharField(max_length=100)
+    
 
     def __str__(self):
         return self.name
@@ -40,7 +41,7 @@ class Election(models.Model):
             # Schedule deactivation after 24 hours
             deactivation_time = self.created_at + timedelta(hours=24)
             # You'll need to implement celery or django-background-tasks for this
-            schedule_deactivation(self.pk, deactivation_time)
+            # schedule_deactivation(self.pk, deactivation_time)
         else:
             super().save(*args, **kwargs)
 

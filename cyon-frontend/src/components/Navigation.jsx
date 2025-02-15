@@ -5,13 +5,23 @@ import logo from "../assets/log.jpg";
 import { Link } from "react-router-dom";
 import { FaVoteYea } from "react-icons/fa";
 import { GlobalContext } from "../constant/context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { program } = useContext(GlobalContext);
+  const { program, isAuthenticated, setIsAuthenticated, auth } = useContext(GlobalContext);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    navigate("/");
+    setIsAuthenticated(false);
   };
 
   return (
@@ -39,6 +49,10 @@ function NavBar() {
         <Link to="donate">
           <button className={styles.donateButton}>Donate</button>
         </Link>
+
+        {isAuthenticated && (
+          <button className={styles.logoutButton} onClick={handleLogout}>Logout</button>
+        )}
       </nav>
 
       {/* Hamburger Icon */}

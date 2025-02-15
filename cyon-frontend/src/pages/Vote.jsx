@@ -14,7 +14,7 @@ const Vote = () => {
       try {
         const response = await api.get("candidates");
         setCandidates(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (error) {
         console.error("Error fetching candidates:", error);
       }
