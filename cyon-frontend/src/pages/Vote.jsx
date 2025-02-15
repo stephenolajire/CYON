@@ -79,7 +79,7 @@ const Vote = () => {
             {candidates.map((candidate) => (
               <li className={styles.candidateCard} key={candidate.id}>
                 <img
-                  src={`http://localhost:8000${candidate.image}`}
+                  src={candidate.image}
                   alt={candidate.name}
                   className={styles.candidateImage}
                 />
