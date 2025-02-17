@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -56,6 +57,7 @@ class Candidate(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='candidates')
     votes = models.IntegerField(default=0)
     image =  CloudinaryField('image', blank=True, null=True)  # Path for storing images
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.name} - {self.post.name} ({self.election.title})"
