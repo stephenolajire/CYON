@@ -16,26 +16,26 @@ class ProgramSerializer(serializers.ModelSerializer):
         model = Program
         fields = '__all__'
 
-# class PostSerializer(serializers.ModelSerializer):
-#     # candidates = CandidateSerializer(many=True, read_only=True)
+class PostSerializer(serializers.ModelSerializer):
+    # candidates = CandidateSerializer(many=True, read_only=True)
 
-#     class Meta:
-#         model = Post
-#         fields = '__all__'
+    class Meta:
+        model = Post
+        fields = '__all__'
 
-# class CandidateSerializer(serializers.ModelSerializer):
+class CandidateSerializer(serializers.ModelSerializer):
 
-#     image = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
-#     def get_image(self, obj):
-#         request = self.context.get('request')
-#         if obj.image:
-#             return request.build_absolute_uri(obj.image.url)
-#         return None
-#     post = PostSerializer()
-#     class Meta:
-#         model = Candidate
-#         fields = '__all__'
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
+    post = PostSerializer()
+    class Meta:
+        model = Candidate
+        fields = '__all__'
 
 
 

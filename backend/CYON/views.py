@@ -24,61 +24,61 @@ class ProgramView(APIView):
             return Response({"message": "No programs available"}, status=status.HTTP_404_NOT_FOUND)
         
 
-# class LatestElectionCandidatesView(APIView):
-#     def get(self, request):
-#         try:
-#             # Get the latest election by date
-#             latest_election = Election.objects.latest('date_created')
+class LatestElectionCandidatesView(APIView):
+    def get(self, request):
+        try:
+            # Get the latest election by date
+            latest_election = Election.objects.latest('date_created')
             
-#             # Get all candidates related to the latest election
-#             candidates = Candidate.objects.filter(election=latest_election)
+            # Get all candidates related to the latest election
+            candidates = Candidate.objects.filter(election=latest_election)
             
-#             # Serialize the candidates
-#             serializer = CandidateSerializer(candidates, many=True, context={'request': request})
+            # Serialize the candidates
+            serializer = CandidateSerializer(candidates, many=True, context={'request': request})
             
-#             return Response(
-#                 serializer.data, status=status.HTTP_200_OK
-#             )
-#         except Election.DoesNotExist:
-#             return Response({"message": "No elections found."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.data, status=status.HTTP_200_OK
+            )
+        except Election.DoesNotExist:
+            return Response({"message": "No elections found."}, status=status.HTTP_400_BAD_REQUEST)
         
 
-# class VoteView(APIView):
-#     permission_classes = [IsAuthenticated]
+class VoteView(APIView):
+    permission_classes = [IsAuthenticated]
 
-#     def post(self, request, candidate_id):
-#         try:
-#             candidate = get_object_or_404(Candidate, id=candidate_id)
-#             election = candidate.election
+    def post(self, request, candidate_id):
+        try:
+            candidate = get_object_or_404(Candidate, id=candidate_id)
+            election = candidate.election
             
-#             if not election.is_active:
-#                 return Response(
-#                     {'error': 'This election is no longer active'}, 
-#                     status=status.HTTP_400_BAD_REQUEST
-#                 )
+            if not election.is_active:
+                return Response(
+                    {'error': 'This election is no longer active'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             
-#             # Check if user has already voted for this post
-#             user_votes = request.user.votes.filter(candidate__election=election)
-#             voted_posts = set(vote.candidate.post.id for vote in user_votes)
+            # Check if user has already voted for this post
+            user_votes = request.user.votes.filter(candidate__election=election)
+            voted_posts = set(vote.candidate.post.id for vote in user_votes)
             
-#             if candidate.post.id in voted_posts:
-#                 return Response(
-#                     {'error': 'Already voted for this post'}, 
-#                     status=status.HTTP_400_BAD_REQUEST
-#                 )
+            if candidate.post.id in voted_posts:
+                return Response(
+                    {'error': 'Already voted for this post'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
                 
-#             # Record the vote
-#             candidate.votes += 1
-#             candidate.save()
+            # Record the vote
+            candidate.votes += 1
+            candidate.save()
             
-#             # Record user's vote
-#             Vote.objects.create(user=request.user, candidate=candidate)
+            # Record user's vote
+            Vote.objects.create(user=request.user, candidate=candidate)
             
-#             return Response({'success': True}, status=status.HTTP_201_CREATED)
+            return Response({'success': True}, status=status.HTTP_201_CREATED)
 
-#         except Exception as e:
-#             return Response(
-#                 {'error': str(e)},
-#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
         

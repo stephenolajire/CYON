@@ -51,23 +51,22 @@ class Election(models.Model):
         return self.title
 
 
-# class Candidate(models.Model):
-#     election = models.ForeignKey(Election, on_delete=models.CASCADE, related_name='candidates')
-#     name = models.CharField(max_length=100)
-#     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='candidates')
-#     votes = models.IntegerField(default=0)
-#     image =  CloudinaryField('image', blank=True, null=True)  # Path for storing images
-#     date_created = models.DateTimeField(auto_now_add=True)
+class Candidate(models.Model):
+    election = models.ForeignKey(Election, on_delete=models.CASCADE, related_name='candidates')
+    name = models.CharField(max_length=100)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='candidates')
+    votes = models.IntegerField(default=0)
+    image =  CloudinaryField('image', blank=True, null=True)  # Path for storing images
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.post.name} ({self.election.title})"
     
 
-#     def __str__(self):
-#         return f"{self.name} - {self.post.name} ({self.election.title})"
-    
+class Vote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
-# class Vote(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='votes')
-#     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
-#     timestamp = models.DateTimeField(auto_now_add=True)
-
-#     class Meta:
-#         unique_together = ['user', 'candidate']
+    class Meta:
+        unique_together = ['user', 'candidate']
