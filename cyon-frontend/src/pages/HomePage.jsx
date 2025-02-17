@@ -17,8 +17,10 @@ const HomePage = () => {
   const [isElectionClosed, setIsElectionClosed] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
 
+  let timerInterval; // Declare the interval variable here
+
   useEffect(() => {
-    if (program.date_created) {
+    if (program?.date_created) {
       const createdDate = new Date(program.date_created);
       const closingTime = new Date(createdDate.getTime() + 24 * 60 * 60 * 1000); // Add 24 hours
       const updateCountdown = () => {
@@ -45,12 +47,12 @@ const HomePage = () => {
         }
       };
 
-      updateCountdown(); // Run immediately
-      const timerInterval = setInterval(updateCountdown, 1000); // Update every second
+      updateCountdown();
+      timerInterval = setInterval(updateCountdown, 1000);
 
-      return () => clearInterval(timerInterval); // Cleanup on unmount
+      return () => clearInterval(timerInterval);
     }
-  }, [program.date_created]);
+  }, [program?.date_created]); // Use optional chaining
 
   return (
     <section>
@@ -58,7 +60,7 @@ const HomePage = () => {
         <title>Home - CYON St George</title>
       </Helmet>
       <div className={styles.voteDiv}>
-        {program.title === "Election" && (
+        {program?.title === "Election" && ( // Use optional chaining
           <div>
             <FaVoteYea
               className={styles.vote}
