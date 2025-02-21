@@ -31,7 +31,7 @@ class LatestElectionCandidatesView(APIView):
             latest_election = Election.objects.latest('date_created')
             
             # Get all candidates related to the latest election
-            candidates = Candidate.objects.filter(election=latest_election)
+            candidates = Candidate.objects.filter(election=latest_election).order_by('date_created')
             
             # Serialize the candidates
             serializer = CandidateSerializer(candidates, many=True, context={'request': request})

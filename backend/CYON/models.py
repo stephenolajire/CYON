@@ -24,7 +24,7 @@ class Program(models.Model):
 
 class Post(models.Model):
     name = models.CharField(max_length=100)
-    
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -35,7 +35,7 @@ class Election(models.Model):
     date = models.DateField()  # Date of the election
     description = models.TextField(blank=True, null=True)  # Optional description
     is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:  # If this is a new election
