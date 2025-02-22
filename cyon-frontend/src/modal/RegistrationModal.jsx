@@ -77,7 +77,28 @@ const RegistrationModal = () => {
           cpassword: "",
           education: "",
         });
-      }
+      } 
+      else if (response.status === 400){
+        Swal.fire({
+          title: "Email already exit!",
+          text: "Please login to vote.",
+          icon: "error",
+          showClass: {
+            popup: `
+                animate__animated
+                animate__fadeInUp
+                animate__faster
+            `,
+          },
+          hideClass: {
+            popup: `
+                animate__animated
+                animate__fadeOutDown
+                animate__faster
+            `,
+          },
+        });
+      };
     } catch (error) {
       Swal.fire({
         title: "Registration Failed!",

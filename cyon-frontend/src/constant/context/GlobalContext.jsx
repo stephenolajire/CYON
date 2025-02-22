@@ -26,6 +26,7 @@ export const GlobalProvider = ({ children }) => {
       if (response.data) {
         setProgram(response.data);
         setLoading(false)
+        console.log(response.data)
       } else {
         return;
       }

@@ -28,7 +28,7 @@ class LatestElectionCandidatesView(APIView):
     def get(self, request):
         try:
             # Get the latest election by date
-            latest_election = Election.objects.latest('date_created')
+            latest_election = Election.objects.latest('created_at')
             
             # Get all candidates related to the latest election
             candidates = Candidate.objects.filter(election=latest_election).order_by('date_created')
