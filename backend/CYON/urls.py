@@ -6,4 +6,6 @@ urlpatterns = [
     path('candidates', LatestElectionCandidatesView.as_view(), name='latest-election-candidates'),
     path('vote/<int:candidate_id>/', VoteView.as_view(), name='vote'),
     path("contact/", ContactMessageView.as_view(), name="contact-form"),
+    path('outreach/', OutreachListView.as_view(), name='outreach-list'),
+    path('outreach/<int:pk>/', OutreachDetailView.as_view(), name='outreach-detail'),
 ]

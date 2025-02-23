@@ -29,3 +29,14 @@ class CandidateAdmin(admin.ModelAdmin):
 admin.site.register(Program)
 admin.site.register(Vote)
 admin.site.register(ContactMessage)
+
+class GalleryInline(admin.TabularInline):
+    model = Gallery
+    extra = 5  # Number of empty forms to display by default
+    fields = ['image'] 
+
+@admin.register(Outreach)
+class OutreachAdmin(admin.ModelAdmin):
+    list_display = ['title', 'date', 'description']
+    search_fields = ['title']
+    inlines = [GalleryInline]

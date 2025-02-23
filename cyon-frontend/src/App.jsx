@@ -8,6 +8,7 @@ import EmailModal from "./modal/EmailModal";
 import Vote from "./pages/Vote";
 import ProtectedRoute from "./constant/api/ProtectedRoute";
 import ContactForm from "./pages/ContactPage";
+import OutreachList from "./pages/OutreachPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               }
             />
             <Route path="contact" element={<ContactForm/>}/>
+            <Route path="outreach" element={<OutreachList/>} />
           </Route>
         </Routes>
       </Router>

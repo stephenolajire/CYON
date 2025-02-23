@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.mail import send_mail
 from django.conf import settings
+from rest_framework import generics
 
 # Create your views here.
 class ProgramView(APIView):
@@ -104,3 +105,13 @@ class ContactMessageView(APIView):
 
             return Response({"message": "Your message has been sent successfully!"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OutreachListView(generics.ListAPIView):
+    queryset = Outreach.objects.prefetch_related('gallery').all()
+    serializer_class = OutreachSerializer
+
+
+class OutreachDetailView(generics.RetrieveAPIView):
+    queryset = Outreach.objects.prefetch_related('gallery').all()
+    serializer_class = OutreachSerializer

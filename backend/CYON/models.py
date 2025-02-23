@@ -80,4 +80,26 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} - {self.email}"
+    
+
+class Outreach(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    date = models.DateField()
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date_created']  # Default ordering by `date_created` in descending order
+
+    def __str__(self):
+        return self.title
+    
+
+class Gallery (models.Model):
+    image = CloudinaryField('image', blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True) 
+    outreach = models.ForeignKey(Outreach, on_delete=models.CASCADE, related_name='gallery') 
+
+    def __str__(self):
+        return f"Image {self.id}"
 
