@@ -19,6 +19,17 @@ const HomePage = () => {
 
   let timerInterval; // Declare the interval variable here
 
+  const handleClick = () => {
+    if (isElectionClosed) {
+      Swal.fire({
+        icon: "error",
+        title: "Election Closed",
+        text: "The election voting period has ended.",
+        confirmButtonText: "OK",
+      });
+    }
+  }
+
   useEffect(() => {
     if (program?.date_created) {
       const createdDate = new Date(program.date_created);
@@ -31,12 +42,6 @@ const HomePage = () => {
           setIsElectionClosed(true);
           setTimeLeft(null);
           clearInterval(timerInterval);
-          Swal.fire({
-            icon: "error",
-            title: "Election Closed",
-            text: "The election voting period has ended.",
-            confirmButtonText: "OK",
-          });
         } else {
           const hours = Math.floor(timeDifference / (1000 * 60 * 60));
           const minutes = Math.floor(
@@ -61,7 +66,7 @@ const HomePage = () => {
       </Helmet>
       <div className={styles.voteDiv}>
         {program?.title === "Election" && ( // Use optional chaining
-          <div>
+          <div onClick={handleClick}>
             <FaVoteYea
               className={styles.vote}
               onClick={!isElectionClosed ? openEmailModal : null}
