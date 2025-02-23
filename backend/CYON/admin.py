@@ -28,3 +28,4 @@ class CandidateAdmin(admin.ModelAdmin):
 
 admin.site.register(Program)
 admin.site.register(Vote)
+admin.site.register(ContactMessage)

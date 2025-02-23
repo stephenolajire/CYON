@@ -7,6 +7,8 @@ from .serializers import *
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 class ProgramView(APIView):
@@ -82,3 +84,39 @@ class VoteView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
+
+class ContactMessageView(APIView):
+    def post(self, request):
+        serializer = ContactMessageSerializer(data=request.data)
+        if serializer.is_valid():
+            contact_message = serializer.save()
+
+            # Send confirmation email to the user
+            mail_subject = "Your Message Has Been Received"
+            message = f"""
+            Hi {contact_message.name},
+
+            Thank you for reaching out to us! We have received your message and will get back to you as soon as possible.
+
+            Here’s a copy of your message:
+            "{contact_message.message}"
+
+            Best Regards,
+            CYON Ofatedo
+            """
+            send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [contact_message.email])
+
+            # Notify admin about the new message
+            mail_subject = f"New Contact Form Submission from {contact_message.name}"
+            message = f"""
+            You have received a new message from {contact_message.name} ({contact_message.email}).
+
+            Message:
+            "{contact_message.message}"
+
+            Please respond as soon as possible.
+            """
+            send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER])
+
+            return Response({"message": "Your message has been sent successfully!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

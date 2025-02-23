@@ -7,6 +7,7 @@ import RegistrationModal from "./modal/RegistrationModal";
 import EmailModal from "./modal/EmailModal";
 import Vote from "./pages/Vote";
 import ProtectedRoute from "./constant/api/ProtectedRoute";
+import ContactForm from "./pages/ContactPage";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="contact" element={<ContactForm/>}/>
           </Route>
         </Routes>
       </Router>

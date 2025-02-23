@@ -38,6 +38,12 @@ class CandidateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = ['id', 'name', 'email', 'message', 'created_at']
+
+
 
 
 

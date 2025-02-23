@@ -4,6 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css"; // Don't forget to import AOS styles
 import contact from "../assets/contact.webp";
 import Button from "../ui/Button";
+import { Link } from "react-router-dom";
 
 const Contact = ({id}) => {
   useEffect(() => {
@@ -29,7 +30,7 @@ const Contact = ({id}) => {
           </p>
 
           <div className={styles.btnDiv}>
-            <Button content="Inquire Now" />
+            <Link to="contact"><Button content="Inquire Now" /></Link>
           </div>
         </div>
       </div>
