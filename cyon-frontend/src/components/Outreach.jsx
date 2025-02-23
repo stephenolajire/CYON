@@ -16,7 +16,7 @@ const Outreach = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.header} data-aos="fade-up">
-        Outreach
+        Outreach & Media
       </h1>
       <p className={styles.text} data-aos="fade-up">
         Discover more about our organization, explore upcoming events, learn
