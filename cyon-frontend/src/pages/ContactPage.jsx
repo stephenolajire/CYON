@@ -137,7 +137,7 @@ const ContactForm = () => {
           height="450"
           style={{ border: 0, borderRadius: "10px" }}
           allowFullScreen=""
-          loading="lazy"
+          // loading="lazy"
         ></iframe>
       </div>
     </div>

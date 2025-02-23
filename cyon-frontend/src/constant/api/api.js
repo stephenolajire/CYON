@@ -5,7 +5,7 @@ const link = "http://127.0.0.1:8000/api/"
 const render = "https://cyon-backend.onrender.com/api/";
 
 const api = axios.create({
-  baseURL: render,
+  baseURL: link,
 });
 
 api.interceptors.request.use(

@@ -66,6 +66,7 @@ const OutreachList = () => {
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
             <h2 className={styles.modalTitle}>{selectedOutreach.title}</h2>
+            <p>{selectedOutreach.description}</p>
             <div className={styles.imageGrid}>
               {selectedOutreach.gallery.map((image, index) => (
                 <img
