@@ -38,9 +38,9 @@ const OurMission = () => {
             youth to become positive change-makers The Catholic Youth
           </p>
 
-          <div className={styles.btnDiv}>
+          {/* <div className={styles.btnDiv}>
             <Button content="Join Us" />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
