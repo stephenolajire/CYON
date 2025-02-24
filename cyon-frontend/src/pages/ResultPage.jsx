@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styles from "../style/ResultPage.module.css";
 import { GlobalContext } from "../constant/context/GlobalContext";
 import api from "../constant/api/api";
+import Spinner from "../components/Spinner";
 
 const ResultsPage = () => {
   const { candidates } = useContext(GlobalContext);
@@ -28,7 +29,7 @@ const ResultsPage = () => {
     fetchResult();
   }, [id]);
 
-  if (loading) return <p>Loading election results...</p>;
+  if (loading) return <Spinner />;
 
   return (
     <div className={styles.resultsContainer}>
