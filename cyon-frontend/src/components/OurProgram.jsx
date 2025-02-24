@@ -12,7 +12,6 @@ const OurProgram = ({id}) => {
       duration: 1000, // Animation duration
       once: false, // Ensures the animation runs only once
     });
-    fetchProgram()
   }, []);
 
   if (loading) {

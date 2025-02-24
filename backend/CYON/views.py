@@ -38,10 +38,12 @@ class LatestElectionCandidatesView(APIView):
             
             # Serialize the candidates
             serializer = CandidateSerializer(candidates, many=True, context={'request': request})
-            
-            return Response(
-                serializer.data, status=status.HTTP_200_OK
-            )
+            return Response({
+                "election_id": latest_election.id,
+                "election_title": latest_election.title,
+                "candidates": serializer.data
+            }, status=status.HTTP_200_OK)
+        
         except Election.DoesNotExist:
             return Response({"message": "No elections found."}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -115,3 +117,16 @@ class OutreachListView(generics.ListAPIView):
 class OutreachDetailView(generics.RetrieveAPIView):
     queryset = Outreach.objects.prefetch_related('gallery').all()
     serializer_class = OutreachSerializer
+
+
+class ElectionResultsAPIView(APIView):
+    def get(self, request, id):
+        election = get_object_or_404(Election, id=id)
+        candidates = Candidate.objects.filter(election=election).order_by('-votes')
+        
+        serialized_candidates = CandidateSerializer(candidates, many=True, context={'request': request})
+
+        return Response({
+            "election": election.title,
+            "candidates": serialized_candidates.data
+        }, status=status.HTTP_200_OK)

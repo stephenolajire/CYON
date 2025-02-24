@@ -8,4 +8,5 @@ urlpatterns = [
     path("contact/", ContactMessageView.as_view(), name="contact-form"),
     path('outreach/', OutreachListView.as_view(), name='outreach-list'),
     path('outreach/<int:pk>/', OutreachDetailView.as_view(), name='outreach-detail'),
+    path("results/<str:id>/", ElectionResultsAPIView.as_view(), name="election-results"),
 ]

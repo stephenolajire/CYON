@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import api from "../api/api";
 import { jwtDecode } from "jwt-decode";
+import { use } from "react";
 
 // Create Context
 export const GlobalContext = createContext();
@@ -12,6 +13,9 @@ export const GlobalProvider = ({ children }) => {
   const [program, setProgram] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState()
   const [loading, setLoading] = useState (false)
+  const [outreaches, setOutreaches] = useState([]);
+
+  const [candidates, setCandidates] = useState([]);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -26,7 +30,7 @@ export const GlobalProvider = ({ children }) => {
       if (response.data) {
         setProgram(response.data);
         setLoading(false)
-        console.log(response.data)
+        // console.log(response.data)
       } else {
         return;
       }
@@ -34,6 +38,10 @@ export const GlobalProvider = ({ children }) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    fetchProgram();
+  }, []);
 
   const auth = async () => {
     const token = localStorage.getItem("access");
@@ -66,12 +74,44 @@ export const GlobalProvider = ({ children }) => {
     auth();
   }, []);
 
+  const fetchOutreach = async () => {
+    try {
+      const response = await api.get("outreach/");
+      if (response.data) {
+        setOutreaches(response.data);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOutreach();
+  }, []);
+
+  const fetchCandidates = async () => {
+    try {
+      const response = await api.get("candidates");
+      setCandidates(response.data);
+      console.log(response.data);
+      // console.log(response.data.election_id);
+    } catch (error) {
+      console.error("Error fetching candidates:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCandidates();
+  }, []);
+
   return (
     <GlobalContext.Provider
       value={{
         auth,
         isModalOpen,
         openModal,
+        candidates,
         closeModal,
         setModalOpen,
         fetchProgram,
@@ -83,6 +123,8 @@ export const GlobalProvider = ({ children }) => {
         setIsAuthenticated,
         isAuthenticated,
         loading,
+        outreaches,
+        // results,
       }}
     >
       {children}

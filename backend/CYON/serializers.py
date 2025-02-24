@@ -24,7 +24,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CandidateSerializer(serializers.ModelSerializer):
-
+    post_name = serializers.CharField(source='post.name', read_only=True)
     image = serializers.SerializerMethodField()
 
     def get_image(self, obj):

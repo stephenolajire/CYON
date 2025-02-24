@@ -1,0 +1,54 @@
+.container {
+    padding: 5rem 10rem;
+}
+
+.header {
+    margin-bottom: 2rem;
+}
+
+.historyOne {
+    text-align: center;
+    font-size: var(--header-one);
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.intro, .history {
+    font-size: var(--subheading-font-size);
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.historyText {
+    font-size: var(--base-font-size);
+    color: var(--text-color);
+    line-height: var(--spacing-small);
+}
+
+.list {
+    padding-left: 4rem;
+}
+
+.historyText > span {
+    font-weight: 600;
+}
+
+@media (min-width:300px) and (max-width: 767px) {
+    .container {
+        padding: 2rem;
+    }
+
+    .historyOne {
+        font-size: var(--header-two);
+    }
+}
+
+@media (min-width:768px) and (max-width: 1023px) {
+    .container {
+        padding: 5rem;
+    }
+
+    .historyOne {
+        font-size: var(--header-one);
+    }
+}

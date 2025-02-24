@@ -1,26 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import styles from "../style/Vote.module.css"; // Importing CSS module
 import api from "../constant/api/api";
 import Swal from "sweetalert2";
+import { GlobalContext } from "../constant/context/GlobalContext";
 
 const Vote = () => {
-  const [candidates, setCandidates] = useState([]);
+  // const [candidates, setCandidates] = useState([]);
   const [votedPosts, setVotedPosts] = useState(new Set()); // Tracks posts that have been voted on
-
-  // Fetch candidates when the component loads
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      try {
-        const response = await api.get("candidates");
-        setCandidates(response.data);
-        // console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching candidates:", error);
-      }
-    };
-    fetchCandidates();
-  }, []);
+  const {candidates} = useContext(GlobalContext);
+  
 
   // Handle voting
   const handleVote = async (candidateId, post) => {

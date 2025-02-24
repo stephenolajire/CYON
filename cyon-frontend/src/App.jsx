@@ -9,6 +9,8 @@ import Vote from "./pages/Vote";
 import ProtectedRoute from "./constant/api/ProtectedRoute";
 import ContactForm from "./pages/ContactPage";
 import OutreachList from "./pages/OutreachPage";
+import AboutPage from "./pages/AboutPage";
+import ResultsPage from "./pages/ResultPage";
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
             />
             <Route path="contact" element={<ContactForm/>}/>
             <Route path="outreach" element={<OutreachList/>} />
+            <Route path="about" element={<AboutPage/>} />
+            <Route path="results" element={<ResultsPage/>} />
           </Route>
         </Routes>
       </Router>

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Hero from "../components/Hero";
 import Mission from "../components/Mission";
 import About from "../components/About";
@@ -13,27 +14,16 @@ import { FaVoteYea } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const HomePage = () => {
+  const navigate = useNavigate(); // Initialize navigate function
   const { program, openEmailModal } = useContext(GlobalContext);
   const [isElectionClosed, setIsElectionClosed] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
-
-  let timerInterval; // Declare the interval variable here
-
-  const handleClick = () => {
-    if (isElectionClosed) {
-      Swal.fire({
-        icon: "error",
-        title: "Election Closed",
-        text: "The election voting period has ended.",
-        confirmButtonText: "OK",
-      });
-    }
-  }
 
   useEffect(() => {
     if (program?.date_created) {
       const createdDate = new Date(program.date_created);
       const closingTime = new Date(createdDate.getTime() + 24 * 60 * 60 * 1000); // Add 24 hours
+
       const updateCountdown = () => {
         const now = new Date();
         const timeDifference = closingTime - now;
@@ -41,7 +31,6 @@ const HomePage = () => {
         if (timeDifference <= 0) {
           setIsElectionClosed(true);
           setTimeLeft(null);
-          clearInterval(timerInterval);
         } else {
           const hours = Math.floor(timeDifference / (1000 * 60 * 60));
           const minutes = Math.floor(
@@ -53,11 +42,28 @@ const HomePage = () => {
       };
 
       updateCountdown();
-      timerInterval = setInterval(updateCountdown, 1000);
+      const timerInterval = setInterval(updateCountdown, 1000);
 
       return () => clearInterval(timerInterval);
     }
-  }, [program?.date_created]); // Use optional chaining
+  }, [program?.date_created]);
+
+  const handleClick = () => {
+    if (isElectionClosed) {
+      Swal.fire({
+        icon: "info",
+        title: "Election Closed",
+        text: "Do you want to view the results?",
+        showCancelButton: true,
+        confirmButtonText: "Yes, View Results",
+        cancelButtonText: "No, Close",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/results"); // Redirect to results page
+        }
+      });
+    }
+  };
 
   return (
     <section>
@@ -65,7 +71,7 @@ const HomePage = () => {
         <title>Home - CYON St George</title>
       </Helmet>
       <div className={styles.voteDiv}>
-        {program?.title === "Election" && ( // Use optional chaining
+        {program?.title === "Election" && (
           <div onClick={handleClick}>
             <FaVoteYea
               className={styles.vote}

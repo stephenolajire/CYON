@@ -1,28 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "../style/OutreachList.module.css"; // Importing CSS Module
 import api from "../constant/api/api";
+import { GlobalContext } from "../constant/context/GlobalContext";
+import { Helmet } from "react-helmet";
 
 const OutreachList = () => {
-  const [outreaches, setOutreaches] = useState([]);
   const [selectedOutreach, setSelectedOutreach] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
-  const fetchOutreach = async () => {
-    try {
-      const response = await api.get("outreach/");
-      if (response.data) {
-        setOutreaches(response.data)
-        console.log(response.data)
-      }
-    } catch (error) {
-      console.log (error)
-    }
-  }
-
-  useEffect(() => {
-    fetchOutreach()
-  }, []);
+  const {outreaches} = useContext(GlobalContext)
+  
 
   const openModal = (outreach) => {
     setSelectedOutreach(outreach);
@@ -31,6 +18,9 @@ const OutreachList = () => {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <title>Outreach - CYON St George</title>
+      </Helmet>
       {outreaches.map((outreach) => (
         <div key={outreach.id} className={styles.outreachCard}>
           {/* Title */}

@@ -4,6 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import youth from "../assets/youthh.webp";
 import Button from "../ui/Button";
+import { Link } from "react-router-dom";
 
 const About = ({id}) => {
   useEffect(() => {
@@ -33,7 +34,9 @@ const About = ({id}) => {
           </p>
 
           <div className={styles.btnDiv}>
-            <Button content="Learn More" />
+            <Link to="/about">
+              <Button content="Learn More" />
+            </Link>
           </div>
         </div>
       </div>
