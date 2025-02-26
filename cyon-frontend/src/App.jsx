@@ -11,6 +11,7 @@ import ContactForm from "./pages/ContactPage";
 import OutreachList from "./pages/OutreachPage";
 import AboutPage from "./pages/AboutPage";
 import ResultsPage from "./pages/ResultPage";
+import DonationSuccess from "./pages/DonationSuccess";
 
 function App() {
   return (
@@ -30,11 +31,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="contact" element={<ContactForm/>}/>
-            <Route path="outreach" element={<OutreachList/>} />
-            <Route path="about" element={<AboutPage/>} />
-            <Route path="results" element={<ResultsPage/>} />
+            <Route path="contact" element={<ContactForm />} />
+            <Route path="outreach" element={<OutreachList />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="results" element={<ResultsPage />} />
+            {/* <Route path="donation-success" element={<DonationSuccess />} /> */}
+            <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
+          <Route path="donation-success" element={<DonationSuccess />} />
         </Routes>
       </Router>
     </GlobalProvider>

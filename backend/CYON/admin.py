@@ -40,3 +40,5 @@ class OutreachAdmin(admin.ModelAdmin):
     list_display = ['title', 'date', 'description']
     search_fields = ['title']
     inlines = [GalleryInline]
+
+admin.site.register(Donation)

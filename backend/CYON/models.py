@@ -102,4 +102,17 @@ class Gallery (models.Model):
 
     def __str__(self):
         return f"Image {self.id}"
+    
+
+class Donation (models.Model):
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    email = models.EmailField()
+    firstname =  models.CharField(max_length=200)
+    lastname = models.CharField(max_length=200)
+    phonenumber = models.CharField(max_length=200)
+    reference = models.CharField(max_length=200, default="")
+    date_created = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=200, default="pending")
+    def __str__(self):
+        return f"Donation of {self.amount} by {self.email}"
 

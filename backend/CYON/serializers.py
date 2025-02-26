@@ -66,5 +66,11 @@ class OutreachSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class DonationSerializer (serializers.ModelSerializer):
+    class Meta:
+        model:Donation
+        fields = '__all__'
+
+
 
 

@@ -185,6 +185,8 @@ cloudinary.config(
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# FRONTEND_URL = config('url')
+PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
 
-SITE_DOMAIN = 'http://127.0.0.1:8000' 
+# FRONTEND_URL = "http://localhost:5173",
+
+FRONTEND_URL = "https://cyon-backend.onrender.com/api/"

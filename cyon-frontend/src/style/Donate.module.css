@@ -1,0 +1,72 @@
+.form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.formContainer {
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 10rem;
+}
+
+.formContainer > h2 {
+    font-size: var(--header-two);
+    color: var(--black);
+    margin-bottom: 3rem;
+}
+
+.inputGroup {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.error {
+  color: #dc3545;
+  font-size: 12px;
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+}
+
+.submitButton {
+  background-color: var(--primary-color);
+  color: white;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: var(--base-font-size);
+  transition: background-color 0.3s;
+  height: 4rem;
+}
+
+.submitButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.loader {
+  display: inline-block;
+  position: relative;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

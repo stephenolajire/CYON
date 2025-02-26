@@ -10,6 +10,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import generics
+import requests
+import uuid
 
 # Create your views here.
 class ProgramView(APIView):
@@ -130,3 +132,91 @@ class ElectionResultsAPIView(APIView):
             "election": election.title,
             "candidates": serialized_candidates.data
         }, status=status.HTTP_200_OK)
+    
+
+
+class PaymentView(APIView):
+    def post (self, request):
+        email = request.data.get("email")
+        amount = request.data.get("amount")
+        phone = request.data.get("phonenumber")
+        firstname = request.data.get("firstname")
+        lastname = request.data.get("lastname")
+
+        if not email or not amount or not phone or not firstname or not lastname:
+            return Response({"error": "All fields are required"}, status=400)
+
+        # Generate a unique reference ID
+        reference = str(uuid.uuid4())
+
+        try:
+            amount = float(request.data.get("amount"))
+            if amount <= 0:
+                return Response(
+                    {"error": "Amount must be greater than 0"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        except ValueError:
+            return Response(
+                {"error": "Invalid amount format"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        paystack_url = "https://api.paystack.co/transaction/initialize"
+        headers = {
+            "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
+            "Content-Type": "application/json",
+        }
+
+        callback_url = f"{settings.FRONTEND_URL}/donation-success"
+
+        payload = {
+            "email": email,
+            "amount": int(amount) * 100,
+            "callback_url": callback_url,  
+        }
+
+        response = requests.post(paystack_url, headers=headers, json=payload)
+        response_data = response.json()
+
+        if response_data.get("status"):
+            donation = Donation.objects.create(phonenumber=phone, email=email, amount=amount, reference=reference)
+            donation.save()
+            payment_url = response_data['data']['authorization_url']
+            return Response({"payment_url": payment_url}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Failed to initialize payment"}, status=500)
+    
+
+@api_view(["GET"])
+def verify_payment(request, reference):
+    try:
+        verify_url = f"https://api.paystack.co/transaction/verify/{reference}"
+        headers = {
+            "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"
+        }
+        
+        response = requests.get(verify_url, headers=headers)
+        response_data = response.json()
+        
+        if response_data["status"] and response_data["data"]["status"] == "success":
+            # Update donation status in database
+            donation = Donation.objects.get(reference=reference)
+            donation.status = "completed"
+            donation.save()
+            
+            return Response({
+                "status": "success",
+                "message": "Payment verified successfully"
+            })
+        
+        return Response({
+            "status": "failed",
+            "message": "Payment verification failed"
+        }, status=400)
+        
+    except Exception as e:
+        return Response({
+            "status": "error",
+            "message": str(e)
+        }, status=500)
