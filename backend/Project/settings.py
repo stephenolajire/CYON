@@ -189,4 +189,4 @@ PAYSTACK_SECRET_KEY = config("PAYSTACK_SECRET_KEY")
 
 # FRONTEND_URL = "http://localhost:5173",
 
-FRONTEND_URL = "https://cyon-backend.onrender.com/api"
+FRONTEND_URL = "https://cyon-backend.onrender.com"
