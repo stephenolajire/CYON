@@ -18,7 +18,6 @@ const DonationSuccess = () => {
       const code = useParams();
       const reference = searchParams.get("reference");
       const trxref = searchParams.get("trxref");
-      const ref = searchParams.get("ref");
 
       if (!reference || !trxref) {
         setStatus({
@@ -33,7 +32,7 @@ const DonationSuccess = () => {
           icon: "error",
           confirmButtonText: "OK",
         }).then(() => {
-          navigate("/donations");
+          navigate("/donate");
         });
         return;
       }
@@ -50,7 +49,7 @@ const DonationSuccess = () => {
 
         clearTimeout(timeoutId);
 
-        if (response.data.status === 200) {
+        if (response.status === 200) {
           setStatus({
             verifying: false,
             success: true,
