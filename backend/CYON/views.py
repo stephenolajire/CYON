@@ -147,7 +147,7 @@ class PaymentView(APIView):
             return Response({"error": "All fields are required"}, status=400)
 
         # Generate a unique reference ID
-        ref = str(uuid.uuid4())
+        code = str(uuid.uuid4())
 
         try:
             amount = float(request.data.get("amount"))
@@ -168,7 +168,7 @@ class PaymentView(APIView):
             "Content-Type": "application/json",
         }
 
-        callback_url = f"{settings.FRONTEND_URL}/donation-success/{ref}/"
+        callback_url = f"{settings.FRONTEND_URL}/donation-success/{code}"
 
         payload = {
             "email": email,
@@ -180,7 +180,7 @@ class PaymentView(APIView):
         response_data = response.json()
 
         if response_data.get("status"):
-            donation = Donation.objects.create(phonenumber=phone, email=email, amount=amount, reference=ref)
+            donation = Donation.objects.create(phonenumber=phone, email=email, amount=amount, reference=code)
             donation.save()
             payment_url = response_data['data']['authorization_url']
             return Response({"payment_url": payment_url}, status=status.HTTP_200_OK)
@@ -189,7 +189,7 @@ class PaymentView(APIView):
     
 
 class PaystackCallbackView(APIView):
-    def get(self, request, ref):
+    def get(self, request, code):
         reference = request.query_params.get('reference')
         paystack_url = f"https://api.paystack.co/transaction/verify/{reference}"
         headers = {
@@ -201,7 +201,7 @@ class PaystackCallbackView(APIView):
 
         if response_data['status'] and response_data['data']['status'] == 'success':
             # Retrieve the latest Order with the matching cart_code
-            donation = Donation.objects.filter(reference=ref)  # Assumes a created_at timestamp
+            donation = Donation.objects.filter(reference=code)  # Assumes a created_at timestamp
 
             if donation.status == 'completed':
                 return Response({"message": "Payment, already completed"}, status=status.HTTP_200_OK)

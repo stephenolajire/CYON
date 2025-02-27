@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useParams } from "react-router-dom";
 import api from "../constant/api/api";
 import Swal from "sweetalert2";
 import styles from "../style/DonationSuccess.module.css";
@@ -15,11 +15,12 @@ const DonationSuccess = () => {
 
   useEffect(() => {
     const verifyPayment = async () => {
+      const code = useParams();
       const reference = searchParams.get("reference");
       const trxref = searchParams.get("trxref");
       const ref = searchParams.get("ref");
 
-      if (!reference || !trxref || !ref) {
+      if (!reference || !trxref) {
         setStatus({
           verifying: false,
           success: false,
@@ -42,7 +43,8 @@ const DonationSuccess = () => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-        const response = await api.get(`paystack/verify/${ref}/`, {
+        const response = await api.get(`paystack/verify/${code}/`, {
+          params: { reference },
           signal: controller.signal,
         });
 
@@ -95,7 +97,7 @@ const DonationSuccess = () => {
               state: { subject: "Payment Issue", reference },
             });
           } else {
-            navigate("/donations");
+            navigate("/donate");
           }
         });
       }
