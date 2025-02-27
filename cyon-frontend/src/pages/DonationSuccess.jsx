@@ -2,55 +2,102 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import api from "../constant/api/api";
 import Swal from "sweetalert2";
+import styles from "../style/DonationSuccess.module.css";
 
 const DonationSuccess = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [verifying, setVerifying] = useState(true);
+  const [status, setStatus] = useState({
+    verifying: true,
+    success: false,
+    error: null,
+  });
 
   useEffect(() => {
     const verifyPayment = async () => {
       const reference = searchParams.get("reference");
       const trxref = searchParams.get("trxref");
+      const ref = searchParams.get("ref");
 
-      if (!reference || !trxref) {
+      if (!reference || !trxref || !ref) {
+        setStatus({
+          verifying: false,
+          success: false,
+          error: "Missing reference or transaction ID",
+        });
+
         Swal.fire({
           title: "Invalid Payment",
           text: "Missing reference or transaction ID. Redirecting...",
           icon: "error",
           confirmButtonText: "OK",
         }).then(() => {
-          navigate("/");
+          navigate("/donations");
         });
         return;
       }
 
       try {
-        const response = await api.get(`paystack/verify/${reference}/`);
+        // Add timeout to handle API delays
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        const response = await api.get(`paystack/verify/${ref}/`, {
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
 
         if (response.data.status === "success") {
+          setStatus({
+            verifying: false,
+            success: true,
+            error: null,
+          });
+
           Swal.fire({
             title: "Thank You!",
-            text: "Your donation was successful",
+            text: "Your donation was successful. We appreciate your support!",
             icon: "success",
-            confirmButtonText: "OK",
+            confirmButtonText: "Return Home",
           }).then(() => {
             navigate("/");
           });
         } else {
-          throw new Error("Payment verification failed");
+          throw new Error(
+            response.data.message || "Payment verification failed"
+          );
         }
       } catch (error) {
+        const errorMessage =
+          error.name === "AbortError"
+            ? "Verification timed out. Please contact support with your reference ID."
+            : error.message || "An error occurred during verification.";
+
+        setStatus({
+          verifying: false,
+          success: false,
+          error: errorMessage,
+        });
+
         Swal.fire({
           title: "Verification Failed",
-          text: error.message || "An error occurred during verification.",
+          text: `${errorMessage} (Ref: ${reference})`,
           icon: "error",
-          confirmButtonText: "OK",
-        }).then(() => {
-          navigate("/");
+          confirmButtonText: "Try Again",
+          showCancelButton: true,
+          cancelButtonText: "Contact Support",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            navigate("/contact", {
+              state: { subject: "Payment Issue", reference },
+            });
+          } else {
+            navigate("/donations");
+          }
         });
-      } finally {
-        setVerifying(false);
       }
     };
 
@@ -58,13 +105,61 @@ const DonationSuccess = () => {
   }, [searchParams, navigate]);
 
   return (
-    <div style={{ textAlign: "center", padding: "50px" }}>
-      {verifying ? (
-        <div>
-          <h2>Verifying your payment...</h2>
-          <p>Please wait...</p>
+    <div className={styles.container}>
+      {status.verifying && (
+        <div className={styles.loaderWrapper}>
+          <div className={styles.loader}></div>
+          <h2 className={styles.title}>Verifying your donation</h2>
+          <p className={styles.message}>
+            Please wait while we confirm your payment...
+          </p>
+          <p className={styles.reference}>
+            Reference: {searchParams.get("reference") || "N/A"}
+          </p>
         </div>
-      ) : null}
+      )}
+
+      {!status.verifying && status.error && !Swal.isVisible() && (
+        <div className={styles.errorState}>
+          <div className={styles.errorIcon}>
+            <i className="fas fa-exclamation-circle"></i>
+          </div>
+          <h2 className={styles.title}>Verification Issue</h2>
+          <p className={styles.message}>{status.error}</p>
+          <div className={styles.buttonGroup}>
+            <button
+              className={styles.primaryButton}
+              onClick={() => window.location.reload()}
+            >
+              Try Again
+            </button>
+            <button
+              className={styles.secondaryButton}
+              onClick={() => navigate("/")}
+            >
+              Return Home
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!status.verifying && status.success && !Swal.isVisible() && (
+        <div className={styles.successState}>
+          <div className={styles.successIcon}>
+            <i className="fas fa-check-circle"></i>
+          </div>
+          <h2 className={styles.title}>Thank You!</h2>
+          <p className={styles.message}>
+            Your donation was successful. We appreciate your support!
+          </p>
+          <button
+            className={styles.primaryButton}
+            onClick={() => navigate("/")}
+          >
+            Return Home
+          </button>
+        </div>
+      )}
     </div>
   );
 };

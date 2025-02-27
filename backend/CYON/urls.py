@@ -10,5 +10,5 @@ urlpatterns = [
     path('outreach/<int:pk>/', OutreachDetailView.as_view(), name='outreach-detail'),
     path("results/<str:id>/", ElectionResultsAPIView.as_view(), name="election-results"),
     path("paystack/donate/", PaymentView.as_view(), name="paystack-donate"),
-    path("paystack/verify/<str:reference>/", verify_payment, name="paystack-verify"),
+    path("paystack/verify/<str:reference>/", PaystackCallbackView.as_view(), name="paystack-verify"),
 ]
