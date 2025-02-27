@@ -229,6 +229,12 @@ class PaystackCallbackView(APIView):
             donation.status = "completed"
             donation.save()
 
+            mail_subject = f"Thank You for Your Generous Donation! \n\n Dear {donation.firstname} {donation.lastname}," 
+            message = (
+                f"We sincerely appreciate your generous donation to CYON St George Ofatedo Osogbo. Your support means the world to us and will go a long way in making a meaningful impact. \n\n Your contribution of ₦{donation.amount} has been successfully received and verified. Because of your kindness, we can continue our mission to serve the community and spread the love of Christ. \n\n Thank you once again for your support. May God bless you abundantly. \n\n Warm regards, \n CYON St George Ofatedo Osogbo"
+            )
+            send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [donation.email])
+
             return Response({"message": "Payment successful"}, status=status.HTTP_200_OK)
 
         return Response({"error": "Payment verification failed"}, status=status.HTTP_400_BAD_REQUEST)
