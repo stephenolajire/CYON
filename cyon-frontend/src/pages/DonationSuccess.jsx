@@ -38,16 +38,10 @@ const DonationSuccess = () => {
       }
 
       try {
-        // Add timeout to handle API delays
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
-
         const response = await api.get(`paystack/verify/${code}/`, {
           params: { reference },
-          signal: controller.signal,
         });
 
-        clearTimeout(timeoutId);
 
         if (response.status === 200) {
           setStatus({
@@ -70,10 +64,7 @@ const DonationSuccess = () => {
           );
         }
       } catch (error) {
-        const errorMessage =
-          error.name === "AbortError"
-            ? "Verification timed out. Please contact support with your reference ID."
-            : error.message || "An error occurred during verification.";
+         console.log( error.message || "An error occurred during verification.");
 
         setStatus({
           verifying: false,
