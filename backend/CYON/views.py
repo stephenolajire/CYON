@@ -191,6 +191,7 @@ class PaymentView(APIView):
 class PaystackCallbackView(APIView):
     def get(self, request, code):
         reference = request.query_params.get('reference')
+        print(reference)
         paystack_url = f"https://api.paystack.co/transaction/verify/{reference}"
         headers = {
             "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
@@ -200,7 +201,8 @@ class PaystackCallbackView(APIView):
         response_data = response.json()
 
         if response_data['status'] and response_data['data']['status'] == 'success':
-            # Retrieve the latest Order with the matching cart_code
+            # Retrieve the Donation with the matching code
+            print(code)
             donation = Donation.objects.filter(reference=code)  # Assumes a created_at timestamp
 
             if donation.status == 'completed':

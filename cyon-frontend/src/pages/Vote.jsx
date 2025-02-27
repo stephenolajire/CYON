@@ -8,7 +8,8 @@ import { GlobalContext } from "../constant/context/GlobalContext";
 const Vote = () => {
   // const [candidates, setCandidates] = useState([]);
   const [votedPosts, setVotedPosts] = useState(new Set()); // Tracks posts that have been voted on
-  const {candidates} = useContext(GlobalContext);
+  const {candidates, setCandidates} = useContext(GlobalContext);
+  
   
 
   // Handle voting

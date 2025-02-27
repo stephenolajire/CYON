@@ -124,6 +124,7 @@ export const GlobalProvider = ({ children }) => {
         isAuthenticated,
         loading,
         outreaches,
+        setCandidates,
         // results,
       }}
     >
