@@ -48,7 +48,7 @@ const DonationSuccess = () => {
 
         clearTimeout(timeoutId);
 
-        if (response.data.status === "success") {
+        if (response.data.status === 200) {
           setStatus({
             verifying: false,
             success: true,

@@ -168,18 +168,12 @@ class PaymentView(APIView):
             "Content-Type": "application/json",
         }
 
-        callback_url = f"{settings.FRONTEND_URL}/donation-success/{ref}"
+        callback_url = f"{settings.FRONTEND_URL}/donation-success/{ref}/"
 
         payload = {
             "email": email,
             "amount": int(amount) * 100,
             "callback_url": callback_url,
-            "ref": ref,  
-            "metadata": {
-                "firstname": firstname,
-                "lastname": lastname,
-                "phonenumber": phone
-            }
         }
 
         response = requests.post(paystack_url, headers=headers, json=payload)
