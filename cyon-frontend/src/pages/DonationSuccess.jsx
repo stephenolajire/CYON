@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import styles from "../style/DonationSuccess.module.css";
 
 const DonationSuccess = () => {
+  const { code } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [status, setStatus] = useState({
@@ -13,94 +14,89 @@ const DonationSuccess = () => {
     error: null,
   });
 
-  const code = useParams();
-  
-  useEffect(() => {
-    const verifyPayment = async () => {
-      const reference = searchParams.get("reference");
-      const trxref = searchParams.get("trxref");
+  const verifyPayment = async () => {
+    const reference = searchParams.get("reference");
+    const trxref = searchParams.get("trxref");
 
-      console.log("Params:", code, reference, trxref);
+    console.log("Params:", code, reference, trxref);
 
-      if (!reference || !trxref) {
+    if (!reference || !trxref) {
+      setStatus({
+        verifying: false,
+        success: false,
+        error: "Missing reference or transaction ID",
+      });
+
+      Swal.fire({
+        title: "Invalid Payment",
+        text: "Missing reference or transaction ID. Redirecting...",
+        icon: "error",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/donate");
+      });
+
+      return;
+    }
+
+    try {
+      const response = await api.get(`paystack/verify/${code}/`, {
+        params: { reference },
+      });
+
+      console.log("API Response:", response.data);
+
+      if (response.status === 200) {
         setStatus({
           verifying: false,
-          success: false,
-          error: "Missing reference or transaction ID",
+          success: true,
+          error: null,
         });
 
         Swal.fire({
-          title: "Invalid Payment",
-          text: "Missing reference or transaction ID. Redirecting...",
-          icon: "error",
-          confirmButtonText: "OK",
+          title: "Thank You!",
+          text: "Your donation was successful. We appreciate your support!",
+          icon: "success",
+          confirmButtonText: "Return Home",
         }).then(() => {
-          navigate("/donate");
+          navigate("/");
         });
-        return;
+      } else {
+        throw new Error(response.data.message || "Payment verification failed");
       }
+    } catch (error) {
+      console.error("Error:", error.message || "An error occurred.");
 
-      try {
-        const response = await api.get(`paystack/verify/${code}/`, {
-          params: { reference },
-        });
+      setStatus({
+        verifying: false,
+        success: false,
+        error: error.message || "Payment verification failed.",
+      });
 
-        console.log("API Response:", response.data);
-        console.log("API Response:", response.status);
-
-
-        if (response.status === 200) {
-          setStatus({
-            verifying: false,
-            success: true,
-            error: null,
-          });
-
-          Swal.fire({
-            title: "Thank You!",
-            text: "Your donation was successful. We appreciate your support!",
-            icon: "success",
-            confirmButtonText: "Return Home",
-          }).then(() => {
-            navigate("/");
+      Swal.fire({
+        title: "Verification Failed",
+        text: `Payment verification failed. (Ref: ${reference})`,
+        icon: "error",
+        confirmButtonText: "Try Again",
+        showCancelButton: true,
+        cancelButtonText: "Contact Support",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          navigate("/contact", {
+            state: { subject: "Payment Issue", reference },
           });
         } else {
-          throw new Error(
-            response.data.message || "Payment verification failed"
-          );
+          navigate("/donate");
         }
-      } catch (error) {
-         console.log( error.message || "An error occurred during verification.");
+      });
+    }
+  };
 
-        setStatus({
-          verifying: false,
-          success: false,
-          error: errorMessage,
-        });
-
-        Swal.fire({
-          title: "Verification Failed",
-          text: `${errorMessage} (Ref: ${reference})`,
-          icon: "error",
-          confirmButtonText: "Try Again",
-          showCancelButton: true,
-          cancelButtonText: "Contact Support",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.reload();
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            navigate("/contact", {
-              state: { subject: "Payment Issue", reference },
-            });
-          } else {
-            navigate("/donate");
-          }
-        });
-      }
-    };
-
+  useEffect(() => {
     verifyPayment();
-  }, [searchParams, navigate]);
+  }, [searchParams, navigate, code]); // Ensure dependencies are correct
 
   return (
     <div className={styles.container}>
@@ -119,22 +115,13 @@ const DonationSuccess = () => {
 
       {!status.verifying && status.error && !Swal.isVisible() && (
         <div className={styles.errorState}>
-          <div className={styles.errorIcon}>
-            <i className="fas fa-exclamation-circle"></i>
-          </div>
           <h2 className={styles.title}>Verification Issue</h2>
           <p className={styles.message}>{status.error}</p>
           <div className={styles.buttonGroup}>
-            <button
-              className={styles.primaryButton}
-              onClick={() => window.location.reload()}
-            >
+            <button className={styles.primaryButton} onClick={() => window.location.reload()}>
               Try Again
             </button>
-            <button
-              className={styles.secondaryButton}
-              onClick={() => navigate("/")}
-            >
+            <button className={styles.secondaryButton} onClick={() => navigate("/")}>
               Return Home
             </button>
           </div>
@@ -143,17 +130,11 @@ const DonationSuccess = () => {
 
       {!status.verifying && status.success && !Swal.isVisible() && (
         <div className={styles.successState}>
-          <div className={styles.successIcon}>
-            <i className="fas fa-check-circle"></i>
-          </div>
           <h2 className={styles.title}>Thank You!</h2>
           <p className={styles.message}>
             Your donation was successful. We appreciate your support!
           </p>
-          <button
-            className={styles.primaryButton}
-            onClick={() => navigate("/")}
-          >
+          <button className={styles.primaryButton} onClick={() => navigate("/")}>
             Return Home
           </button>
         </div>
