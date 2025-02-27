@@ -12,6 +12,7 @@ from django.conf import settings
 from rest_framework import generics
 import requests
 import uuid
+from uuid import UUID
 
 # Create your views here.
 class ProgramView(APIView):
@@ -190,28 +191,44 @@ class PaymentView(APIView):
 
 class PaystackCallbackView(APIView):
     def get(self, request, code):
-        reference = request.query_params.get('reference')
-        print(reference)
+        reference = request.query_params.get("reference")
+        if not reference:
+            return Response({"error": "Reference is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            code = UUID(str(code))  # Validate UUID
+        except ValueError:
+            return Response({"error": "Invalid UUID"}, status=status.HTTP_400_BAD_REQUEST)
+
         paystack_url = f"https://api.paystack.co/transaction/verify/{reference}"
-        headers = {
-            "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
-        }
+        headers = {"Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
 
         response = requests.get(paystack_url, headers=headers)
+        
+        # Check for Paystack API errors
+        if response.status_code != 200:
+            return Response({"error": "Failed to verify payment"}, status=status.HTTP_502_BAD_GATEWAY)
+        
         response_data = response.json()
 
-        if response_data['status'] and response_data['data']['status'] == 'success':
-            # Retrieve the Donation with the matching code
-            print(code)
-            donation = Donation.objects.filter(reference=code)  # Assumes a created_at timestamp
+        # Ensure response_data contains the expected keys
+        if not response_data.get("status") or "data" not in response_data:
+            return Response({"error": "Invalid response from Paystack"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-            if donation.status == 'completed':
-                return Response({"message": "Payment, already completed"}, status=status.HTTP_200_OK)
+        if response_data["status"] and response_data["data"]["status"] == "success":
+            # Retrieve the Donation with the matching reference
+            donation = Donation.objects.get(reference=code)  # Use `.first()` to avoid QuerySet issues
 
-            donation.status = 'completed'
+            if not donation:
+                return Response({"error": "Donation not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            if donation.status == "completed":
+                return Response({"message": "Payment already completed"}, status=status.HTTP_200_OK)
+
+            # Update the donation status
+            donation.status = "completed"
             donation.save()
 
             return Response({"message": "Payment successful"}, status=status.HTTP_200_OK)
-        else:
-            return Response({"error": "Payment verification failed"}, status=status.HTTP_400_BAD_REQUEST)
 
+        return Response({"error": "Payment verification failed"}, status=status.HTTP_400_BAD_REQUEST)
