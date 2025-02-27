@@ -37,15 +37,15 @@ function NavBar() {
         <Link to="/" className={styles.link}>
           Home
         </Link>
-        <a href="#about" className={styles.link}>
+        <Link to="about" className={styles.link}>
           About
-        </a>
+        </Link>
         <a href="#programs" className={styles.link}>
           Programs
         </a>
-        <a href="#contact" className={styles.link}>
+        <Link to="contact" className={styles.link}>
           Contact
-        </a>
+        </Link>
         <Link to="donate">
           <button className={styles.donateButton}>Donate</button>
         </Link>

@@ -191,50 +191,76 @@ class PaymentView(APIView):
 
 class PaystackCallbackView(APIView):
     def get(self, request, code):
+        # Get Paystack's reference from query parameters
         reference = request.query_params.get("reference")
         if not reference:
             return Response({"error": "Reference is required"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Validate our own UUID reference from URL path
         try:
             code = UUID(str(code))  # Validate UUID
         except ValueError:
             return Response({"error": "Invalid UUID"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Try to find the donation first before making API calls
+        try:
+            donation = Donation.objects.get(reference=code)
+            
+            # Check if payment was already completed
+            if donation.status == "completed":
+                return Response({"message": "Payment already completed"}, status=status.HTTP_200_OK)
+                
+        except Donation.DoesNotExist:
+            return Response({"error": "Donation not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Verify payment with Paystack using their reference
         paystack_url = f"https://api.paystack.co/transaction/verify/{reference}"
         headers = {"Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
 
-        response = requests.get(paystack_url, headers=headers)
-        
-        # Check for Paystack API errors
-        if response.status_code != 200:
-            return Response({"error": "Failed to verify payment"}, status=status.HTTP_502_BAD_GATEWAY)
-        
-        response_data = response.json()
+        try:
+            response = requests.get(paystack_url, headers=headers, timeout=10)
+            
+            # Check for Paystack API errors
+            if response.status_code != 200:
+                return Response({"error": f"Failed to verify payment. Status code: {response.status_code}"}, 
+                               status=status.HTTP_502_BAD_GATEWAY)
+            
+            response_data = response.json()
 
-        # Ensure response_data contains the expected keys
-        if not response_data.get("status") or "data" not in response_data:
-            return Response({"error": "Invalid response from Paystack"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # Ensure response_data contains the expected keys
+            if not response_data.get("status") or "data" not in response_data:
+                return Response({"error": "Invalid response from Paystack"}, 
+                               status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        if response_data["status"] and response_data["data"]["status"] == "success":
-            # Retrieve the Donation with the matching reference
-            donation = Donation.objects.get(reference=code)  # Use `.first()` to avoid QuerySet issues
+            if response_data["status"] and response_data["data"]["status"] == "success":
+                # Update the donation status
+                donation.status = "completed"
+                donation.save()
 
-            if not donation:
-                return Response({"error": "Donation not found"}, status=status.HTTP_404_NOT_FOUND)
-
-            if donation.status == "completed":
-                return Response({"message": "Payment already completed"}, status=status.HTTP_200_OK)
-
-            # Update the donation status
-            donation.status = "completed"
-            donation.save()
-
-            mail_subject = f"Thank You for Your Generous Donation! \n\n Dear {donation.firstname} {donation.lastname}," 
-            message = (
-                f"We sincerely appreciate your generous donation to CYON St George Ofatedo Osogbo. Your support means the world to us and will go a long way in making a meaningful impact. \n\n Your contribution of ₦{donation.amount} has been successfully received and verified. Because of your kindness, we can continue our mission to serve the community and spread the love of Christ. \n\n Thank you once again for your support. May God bless you abundantly. \n\n Warm regards, \n CYON St George Ofatedo Osogbo"
-            )
-            send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [donation.email])
-
-            return Response({"message": "Payment successful"}, status=status.HTTP_200_OK)
-
-        return Response({"error": "Payment verification failed"}, status=status.HTTP_400_BAD_REQUEST)
+                # Send thank you email
+                mail_subject = f"Thank You for Your Generous Donation!"
+                message = (
+                    f"Dear {donation.firstname} {donation.lastname},\n\n"
+                    f"We sincerely appreciate your generous donation to CYON St George Ofatedo Osogbo. "
+                    f"Your support means the world to us and will go a long way in making a meaningful impact.\n\n"
+                    f"Your contribution of ₦{donation.amount} has been successfully received and verified. "
+                    f"Because of your kindness, we can continue our mission to serve the community and spread the love of Christ.\n\n"
+                    f"Thank you once again for your support. May God bless you abundantly.\n\n"
+                    f"Warm regards,\nCYON St George Ofatedo Osogbo"
+                )
+                
+                try:
+                    send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [donation.email])
+                except Exception as e:
+                    # Log the error but don't fail the transaction
+                    print(f"Failed to send email: {str(e)}")
+                
+                return Response({"message": "Payment successful"}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Payment verification failed with Paystack"}, 
+                               status=status.HTTP_400_BAD_REQUEST)
+                
+        except requests.exceptions.RequestException as e:
+            # Handle network errors, timeouts, etc.
+            return Response({"error": f"Network error when verifying payment: {str(e)}"}, 
+                           status=status.HTTP_503_SERVICE_UNAVAILABLE)
