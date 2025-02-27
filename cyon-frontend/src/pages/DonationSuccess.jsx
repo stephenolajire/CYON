@@ -19,6 +19,8 @@ const DonationSuccess = () => {
       const reference = searchParams.get("reference");
       const trxref = searchParams.get("trxref");
 
+      console.log("Params:", code, reference, trxref);
+
       if (!reference || !trxref) {
         setStatus({
           verifying: false,
