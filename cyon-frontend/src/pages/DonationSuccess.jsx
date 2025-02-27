@@ -13,9 +13,10 @@ const DonationSuccess = () => {
     error: null,
   });
 
+  const code = useParams();
+  
   useEffect(() => {
     const verifyPayment = async () => {
-      const code = useParams();
       const reference = searchParams.get("reference");
       const trxref = searchParams.get("trxref");
 
