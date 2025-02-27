@@ -38,7 +38,7 @@ function App() {
             {/* <Route path="donation-success" element={<DonationSuccess />} /> */}
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
-          <Route path="donation-success/:code" element={<DonationSuccess />} />
+          <Route path="donation-success/:code/" element={<DonationSuccess />} />
         </Routes>
       </Router>
     </GlobalProvider>

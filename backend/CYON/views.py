@@ -168,7 +168,7 @@ class PaymentView(APIView):
             "Content-Type": "application/json",
         }
 
-        callback_url = f"{settings.FRONTEND_URL}/donation-success/{code}"
+        callback_url = f"{settings.FRONTEND_URL}/donation-success/{code}/"
 
         payload = {
             "email": email,
@@ -180,7 +180,7 @@ class PaymentView(APIView):
         response_data = response.json()
 
         if response_data.get("status"):
-            donation = Donation.objects.create(phonenumber=phone, email=email, amount=amount, reference=code)
+            donation = Donation.objects.create(phonenumber=phone, email=email, amount=amount, reference=code, firstname=firstname, lastname=lastname)
             donation.save()
             payment_url = response_data['data']['authorization_url']
             return Response({"payment_url": payment_url}, status=status.HTTP_200_OK)
