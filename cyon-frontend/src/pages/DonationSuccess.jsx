@@ -42,6 +42,9 @@ const DonationSuccess = () => {
           params: { reference },
         });
 
+        console.log("API Response:", response.data);
+        console.log("API Response:", response.status);
+
 
         if (response.status === 200) {
           setStatus({
